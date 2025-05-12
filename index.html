@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mesane Raporlama</title>
+
+  <!-- React ve ReactDOM -->
   <script src="https://unpkg.com/react @18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom @18/umd/react-dom.development.js" crossorigin></script>
+
+  <!-- Babel (JSX için gerekli) -->
   <script src="https://unpkg.com/ @babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Favicon (isteğe bağlı ama güzel görünüm için) -->
+  <link rel="icon" href="data:,">
 </head>
-<body>
+<body class="bg-gray-100">
+  <!-- Uygulama kökü -->
   <div id="root"></div>
+
+  <!-- Ana JS dosyası -->
   <script type="text/babel" src="./index.js"></script>
 </body>
 </html>
