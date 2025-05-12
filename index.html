@@ -1,28 +1,353 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mesane Raporlama</title>
-<link rel="stylesheet" type="text/css" href="view.css" media="all">
-  <!-- React ve ReactDOM -->
-  <script src="https://unpkg.com/react @18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom @18/umd/react-dom.development.js" crossorigin></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesane Karsinomu Raporlama</title>
 
-  <!-- Babel (JSX için gerekli) -->
-  <script src="https://unpkg.com/ @babel/standalone/babel.min.js"></script>
+  <!-- Basit stil tanımları -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
 
-  <!-- Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    #form_container {
+      background: #fff;
+      width: 90%;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-  <!-- Favicon (isteğe bağlı ama güzel görünüm için) -->
-  <link rel="icon" href="data:,">
+    label.description {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    textarea.large {
+      height: 150px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #0055aa;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+
+    td, th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    fieldset {
+      border: 1px solid #e6e6ff;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    legend {
+      font-weight: bold;
+      background-color: #e6e6ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+
+    .choice {
+      margin-left: 10px;
+    }
+  </style>
+
+  <script>
+    function updateDescription(frm) {
+      var Template = "";
+
+      if (frm.A01.value !== "") {
+        Template += "- İşlem: " + frm.A01.value + "\n";
+      }
+      if (frm.A02.value !== "") {
+        Template += "- Tümör Lokalizasyonu: " + frm.A02.value + "\n";
+      }
+      if (frm.A03.value !== "") {
+        Template += "- Tümör Boyutu: " + frm.A03.value + "\n";
+      }
+      if (frm.A04.value !== "") {
+        Template += "- Tümör Histolojisi ve İmmunohistokimyasal Bulgular:\n  - " + frm.A04.value + "\n";
+      }
+      if (frm.A05.value !== "") {
+        Template += "- Histolojik Tip (WHO 5. Baskı): " + frm.A05.value + "\n";
+      }
+      if (frm.A13.value !== "") {
+        Template += "- Ürotelyal Karsinoma Histolojik Derecesi: " + frm.A13.value + "\n";
+      }
+      if (frm.A14.value !== "") {
+        Template += "- Skuamöz Hücreli veya Adenokarsinoma Histolojik Derecesi: " + frm.A14.value + "\n";
+      }
+
+      Template += "- Tümör Konfigürasyonu:\n";
+      if (document.getElementById("A15").checked) Template += "  - " + document.getElementById("A15").value + "\n";
+      if (document.getElementById("A16").checked) Template += "  - " + document.getElementById("A16").value + "\n";
+      if (document.getElementById("A17").checked) Template += "  - " + document.getElementById("A17").value + "\n";
+      if (document.getElementById("A18").checked) Template += "  - " + document.getElementById("A18").value + "\n";
+      if (document.getElementById("A19").checked) Template += "  - " + document.getElementById("A19").value + "\n";
+      if (document.getElementById("A20").checked) Template += "  - " + document.getElementById("A20").value + "\n";
+
+      if (frm.A21.value !== "") {
+        Template += "- Lenfatik ve/veya Vasküler İnfültrasyon: " + frm.A21.value + "\n";
+      }
+      if (frm.A22.value !== "") {
+        Template += "- Perinöral İnfültrasyon: " + frm.A22.value + "\n";
+      }
+
+      Template += "- Tümör Ekstansiyonu:\n";
+      if (document.getElementById("A23").checked) Template += "  - " + document.getElementById("A23").value + "\n";
+      if (document.getElementById("A24").checked) Template += "  - " + document.getElementById("A24").value + "\n";
+      if (document.getElementById("A25").checked) Template += "  - " + document.getElementById("A25").value + "\n";
+      if (document.getElementById("A26").checked) Template += "  - " + document.getElementById("A26").value + "\n";
+      if (document.getElementById("A27").checked) Template += "  - " + document.getElementById("A27").value + "\n";
+      if (document.getElementById("A28").checked) Template += "  - " + document.getElementById("A28").value + "\n";
+      if (document.getElementById("A29").checked) Template += "  - " + document.getElementById("A29").value + "\n";
+      if (document.getElementById("A30").checked) Template += "  - " + document.getElementById("A30").value + "\n";
+      if (document.getElementById("A31").checked) Template += "  - " + document.getElementById("A31").value + "\n";
+      if (document.getElementById("A32").checked) Template += "  - " + document.getElementById("A32").value + "\n";
+      if (document.getElementById("A33").checked) Template += "  - " + document.getElementById("A33").value + "\n";
+      if (document.getElementById("A34").checked) Template += "  - " + document.getElementById("A34").value + "\n";
+      if (document.getElementById("A35").checked) Template += "  - " + document.getElementById("A35").value + "\n";
+      if (document.getElementById("A36").checked) Template += "  - " + document.getElementById("A36").value + "\n";
+      if (document.getElementById("A37").checked) Template += "  - " + document.getElementById("A37").value + "\n";
+      if (document.getElementById("A38").checked) Template += "  - " + document.getElementById("A38").value + "\n";
+      if (document.getElementById("A39").checked) Template += "  - " + document.getElementById("A39").value + "\n";
+      if (document.getElementById("A40").checked) Template += "  - " + document.getElementById("A40").value + "\n";
+      if (document.getElementById("A41").checked) Template += "  - " + document.getElementById("A41").value + "\n";
+      if (document.getElementById("A42").checked) Template += "  - " + document.getElementById("A42").value + "\n";
+      if (document.getElementById("A43").checked) Template += "  - " + document.getElementById("A43").value + "\n";
+
+      if (frm.A44.value !== "" || frm.A45.value !== "" || frm.A46.value !== "" || frm.A47.value !== "" || frm.A48.value !== "") {
+        Template += "\n- Rezeksiyon Marjları:\n";
+        if (frm.A44.value !== "") Template += "  - Sağ Üreteral Marj: " + frm.A44.value + "\n";
+        if (frm.A45.value !== "") Template += "  - Sol Üreteral Marj: " + frm.A45.value + "\n";
+        if (frm.A46.value !== "") Template += "  - Üretral Marj: " + frm.A46.value + "\n";
+        if (frm.A47.value !== "") Template += "  - Yumuşak Doku Marjı: " + frm.A47.value + "\n";
+        if (frm.A48.value !== "") Template += "  - Diğer Marj(lar): " + frm.A48.value + "\n";
+      }
+
+      if (frm.A49.value !== "" || frm.A50.value !== "" || frm.A51.value !== "" || frm.A52.value !== "" || frm.A53.value !== "") {
+        Template += "\n- Bölgesel Lenf Nodları:\n";
+        if (frm.A49.value !== "") Template += "  - İncelenen Bölgesel Lenf Nodu Sayısı: " + frm.A49.value + "\n";
+        if (frm.A50.value !== "") Template += "  - Etkilenen Lenf Nodu Sayısı: " + frm.A50.value + "\n";
+        if (frm.A51.value !== "") Template += "  - Ekstranodal Yayılım: " + frm.A51.value + "\n";
+        if (frm.A52.value !== "") Template += "  - En Büyük Metastatik Lezyon Boyutu (mm), Lokalizasyon: " + frm.A52.value + "\n";
+        if (frm.A53.value !== "") Template += "  - En Büyük Etkilenen Lenf Nodu Boyutu (mm), Lokalizasyon: " + frm.A53.value + "\n";
+      }
+
+      Template += "\n- Uzak Metastaz:\n";
+      if (document.getElementById("A72").checked) Template += "  - " + document.getElementById("A72").value + "\n";
+      if (document.getElementById("A73").checked) Template += "  - " + document.getElementById("A73").value + "\n";
+      if (document.getElementById("A74").checked) Template += "  - " + document.getElementById("A74").value + "\n";
+      if (document.getElementById("A75").checked) Template += "  - " + document.getElementById("A75").value + "\n";
+      if (document.getElementById("A76").checked) Template += "  - " + document.getElementById("A76").value + "\n";
+
+      Template += "\n- Patolojik Evreleme Sınıflandırması (pTNM, AJCC 8. Edisyon):\n";
+      if (document.getElementById("A54").checked) Template += "  - TNM Tanımlayıcılar: " + document.getElementById("A54").value + "\n";
+      if (document.getElementById("A55").checked) Template += "  - TNM Tanımlayıcılar: " + document.getElementById("A55").value + "\n";
+      if (document.getElementById("A56").checked) Template += "  - TNM Tanımlayıcılar: " + document.getElementById("A56").value + "\n";
+      if (frm.A57.value !== "") Template += "  - Birincil Tümör (pT): " + frm.A57.value + "\n";
+      if (frm.A58.value !== "") Template += "  - Bölgesel Lenf Nodları (pN): " + frm.A58.value + "\n";
+      if (frm.A59.value !== "") Template += "  - Uzak Metastaz (pM): " + frm.A59.value + "\n";
+
+      if (document.getElementById("A62").checked) Template += "  - Ürotelyal displazi, düşük derece\n";
+      if (document.getElementById("A63").checked) Template += "  - Prostat adenokarsinomu (prostat karsinomu için protokol kullanın)\n";
+      if (document.getElementById("A64").checked) Template += "  - Keratinize skuamöz metaplazi\n";
+      if (document.getElementById("A65").checked) Template += "  - İnflamasyon/regeneratif değişiklikler\n";
+      if (document.getElementById("A66").checked) Template += "  - Metaplazi (türünü belirtin)\n";
+      if (document.getElementById("A67").checked) Template += "  - Kistitis kistik et glandularis\n";
+      if (document.getElementById("A68").checked) Template += "  - İntestinal metaplazi\n";
+      if (document.getElementById("A69").checked) Template += "  - Tedaviye bağlı değişiklikler\n";
+      if (frm.A70.value !== "") Template += "  - Diğer (belirtin): " + frm.A70.value + "\n";
+
+      if (document.getElementById("A06").checked) Template += "  - Hiçbiri saptanmadı\n";
+      if (document.getElementById("A07").checked) Template += "  - Ürotelyal papilloma\n";
+      if (document.getElementById("A08").checked) Template += "  - Ürotelyal papilloma, invert tip\n";
+      if (document.getElementById("A09").checked) Template += "  - Papiller ürotelyal neoplazm, düşük malign potansiyelli\n";
+      if (document.getElementById("A10").checked) Template += "  - Ürotelyal proliferasyon, belirsiz malign potansiyelli\n";
+      if (document.getElementById("A11").checked) Template += "  - Ürotelyal displazi\n";
+      if (document.getElementById("A12").checked) Template += "  - Değerlendirilemiyor (açıklayın)\n";
+
+      if (frm.A71.value !== "") Template += "\n- Ek Notlar:\n  - " + frm.A71.value + "\n";
+
+      document.getElementById("holdtext").value = Template;
+    }
+
+    function CopyToClipboard() {
+      const copyText = document.getElementById("holdtext");
+      copyText.select();
+      document.execCommand("copy");
+      alert("Rapor panoya kopyalandı!");
+    }
+  </script>
 </head>
-<body class="bg-gray-100">
-  <!-- Uygulama kökü -->
-  <div id="root"></div>
+<body>
+<div id="form_container">
+  <h2>Mesane Karsinomu Raporlama Formu</h2>
+  <p>Bu, US CAP protokolüne dayalı bir mesane biyopsi ve TURBT örneği raporlama şablonudur.</p>
 
-  <!-- Ana JS dosyası -->
-  <script type="text/babel" src="./index.js"></script>
+  <form>
+    <fieldset>
+      <legend>Gross Temel Veri Unsurları:</legend>
+      <table>
+        <tr>
+          <td><label class="description">- İşlem:</label></td>
+          <td>
+            <select ID="A01">
+              <option value=""></option>
+              <option value="Parçalı sistektomi">Parçalı sistektomi</option>
+              <option value="Radikal sistektomi (toplam sistektomi)">Radikal sistektomi (toplam sistektomi)</option>
+              <option value="Radikal sistoprostatektomi">Radikal sistoprostatektomi</option>
+              <option value="Anterior eksizyon">Anterior eksizyon</option>
+              <option value="Diğer (belirtin):">Diğer (belirtin):</option>
+              <option value="Belirtilmemiş">Belirtilmemiş</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label class="description">- Tümör Lokalizasyonu:</label></td>
+          <td>
+            <select ID="A02">
+              <option value=""></option>
+              <option value="Trigon">Trigon</option>
+              <option value="Sağ lateral duvar">Sağ lateral duvar</option>
+              <option value="Sol lateral duvar">Sol lateral duvar</option>
+              <option value="Ön duvar">Ön duvar</option>
+              <option value="Arka duvar">Arka duvar</option>
+              <option value="Kubbe">Kubbe</option>
+              <option value="Diğer (belirtin):">Diğer (belirtin):</option>
+              <option value="Belirtilmemiş">Belirtilmemiş</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label class="description">- Tümör Boyutu:</label></td>
+          <td>
+            <select ID="A03">
+              <option value=""></option>
+              <option value="En büyük boyut (mm):">En büyük boyut (mm):</option>
+              <option value="Tüm boyutlar (mm x mm x mm):">Tüm boyutlar (mm x mm x mm):</option>
+              <option value="Belirlenemiyor (açıklayın):">Belirlenemiyor (açıklayın):</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>Mikroskopik Bulgular:</legend>
+      <label>- Tümör histolojisi ve immünhistokimyasal bulgular:</label>
+      <textarea ID="A04"></textarea>
+      <br><br>
+
+      <label>- Histolojik tip (WHO 5. baskı):</label>
+      <select ID="A05">
+        <option value=""></option>
+        <option value="Noninvaziv papiller ürotelyal karsinoma">Noninvaziv papiller ürotelyal karsinoma</option>
+        <option value="Ürotelyal karsinoma in situ">Ürotelyal karsinoma in situ</option>
+        <option value="İnvaziv ürotelyal karsinoma (konvansiyonel)">İnvaziv ürotelyal karsinoma (konvansiyonel)</option>
+        <option value="Diğer (belirtin):">Diğer (belirtin):</option>
+        <option value="Belirlenemiyor">Belirlenemiyor</option>
+      </select>
+      <br><br>
+
+      <label>- Ürotelyal karsinoma histolojik derecesi:</label>
+      <select ID="A13">
+        <option value=""></option>
+        <option value="Düşük derece">Düşük derece</option>
+        <option value="Yüksek derece">Yüksek derece</option>
+        <option value="Diğer (belirtin):">Diğer (belirtin):</option>
+      </select>
+      <br><br>
+
+      <label>- Skuamöz hücreli veya adenokarsinoma histolojik derecesi:</label>
+      <select ID="A14">
+        <option value=""></option>
+        <option value="G1: İyi diferansiye">G1: İyi diferansiye</option>
+        <option value="G2: Orta diferansiye">G2: Orta diferansiye</option>
+        <option value="G3: Düşük diferansiye">G3: Düşük diferansiye</option>
+        <option value="Belirlenemiyor">Belirlenemiyor</option>
+        <option value="Uygulanamaz">Uygulanamaz</option>
+      </select>
+      <br><br>
+
+      <label>+</label>
+      <input type="checkbox" id="A15" value="Papiller"><label class="choice">Papiller</label>
+      <input type="checkbox" id="A16" value="Solid/nodül"><label class="choice">Solid/nodül</label>
+      <input type="checkbox" id="A17" value="Düz"><label class="choice">Düz</label>
+      <input type="checkbox" id="A18" value="Ülseratif"><label class="choice">Ülseratif</label>
+      <input type="checkbox" id="A19" value="Belirlenemiyor"><label class="choice">Belirlenemiyor</label>
+      <input type="checkbox" id="A20" value="Diğer (belirtin):"><label class="choice">Diğer (belirtin):</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rezeksiyon marjları:</legend>
+      <label>Sağ Üreteral Marj:</label>
+      <select ID="A44">
+        <option value=""></option>
+        <option value="Değerlendirilemiyor">Değerlendirilemiyor</option>
+        <option value="İnvaziv karsinomla tutulmamış">İnvaziv karsinomla tutulmamış</option>
+        <option value="İnvaziv karsinom ve CIS/noinvaziv ürotelyal karsinom tarafından tutulmamış, mesafe belirtin:">İnvaziv karsinom ve CIS/noinvaziv ürotelyal karsinom tarafından tutulmamış, mesafe belirtin:</option>
+        <option value="İnvaziv karsinomla tutulmuş">İnvaziv karsinomla tutulmuş</option>
+        <option value="CIS/noninvaziv yüksek dereceli ürotelyal karsinomla tutulmuş">CIS/noninvaziv yüksek dereceli ürotelyal karsinomla tutulmuş</option>
+        <option value="Noninvaziv düşük dereceli ürotelyal karsinom/ürotelyal displaziyle tutulmuş">Noninvaziv düşük dereceli ürotelyal karsinom/ürotelyal displaziyle tutulmuş</option>
+      </select>
+      <br><br>
+
+      <label>Sol Üreteral Marj:</label>
+      <select ID="A45">
+        <option value=""></option>
+        <option value="Değerlendirilemiyor">Değerlendirilemiyor</option>
+        <option value="İnvaziv karsinomla tutulmamış">İnvaziv karsinomla tutulmamış</option>
+        <option value="İnvaziv karsinom ve CIS/noinvaziv ürotelyal karsinom tarafından tutulmamış, mesafe belirtin:">İnvaziv karsinom ve CIS/noinvaziv ürotelyal karsinom tarafından tutulmamış, mesafe belirtin:</option>
+        <option value="İnvaziv karsinomla tutulmuş">İnvaziv karsinomla tutulmuş</option>
+        <option value="CIS/noninvaziv yüksek dereceli ürotelyal karsinomla tutulmuş">CIS/noninvaziv yüksek dereceli ürotelyal karsinomla tutulmuş</option>
+        <option value="Noninvaziv düşük dereceli ürotelyal karsinom/ürotelyal displaziyle tutulmuş">Noninvaziv düşük dereceli ürotelyal karsinom/ürotelyal displaziyle tutulmuş</option>
+      </select>
+    </fieldset>
+
+    <button type="button" onclick="updateDescription(this.form)">Rapor Oluştur</button>
+    <button type="reset" style="float: right;">Sıfırla</button>
+    <br><br>
+    <textarea id="holdtext" rows="10" style="border: 2px solid #ff6600; width: 100%;"></textarea>
+    <br><br>
+    <button type="button" onclick="CopyToClipboard()">Raporu Panoya Kopyala</button>
+  </form>
+
+  <footer style="margin-top: 30px; font-size: 12px;">
+    Son güncelleme: 01-Eylül-2023 • Queen Mary Hastanesi Anatomi Patoloji Bölümü • US CAP Protokol Şablonlarına Dayanmaktadır.
+  </footer>
+</div>
 </body>
 </html>
